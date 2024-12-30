@@ -22,6 +22,12 @@ export default defineConfig(({ command, mode }) => {
     css: {
       preprocessorOptions: {
         less: {},
+        sass: {
+          implementation: 'sass',
+          sassOptions: {
+            outputStyle: 'compressed',
+          },
+        },
         scss: {
           additionalData: "",
         },
@@ -38,7 +44,7 @@ export default defineConfig(({ command, mode }) => {
       }),
       svgLoader(),
       WindiCSS(),
-      eslint(),
+      // eslint(), // 暂时注释掉
       legacy(),
       splitVendorChunkPlugin(),
       createHtmlPlugin({

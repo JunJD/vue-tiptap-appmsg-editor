@@ -33,10 +33,13 @@
     "windicss": "^3.5.6"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
     "@simonwep/pickr": "^1.9.0",
     "@tiptap/core": "^2.1.12",
     "@tiptap/extension-code-block": "^2.1.13",
     "@tiptap/extension-color": "^2.1.12",
+    "@tiptap/extension-floating-menu": "^2.10.4",
+    "@tiptap/extension-focus": "^2.10.4",
     "@tiptap/extension-highlight": "^2.1.12",
     "@tiptap/extension-image": "^2.1.12",
     "@tiptap/extension-text-align": "^2.1.13",
@@ -44,7 +47,9 @@
     "@tiptap/extension-underline": "^2.1.12",
     "@tiptap/pm": "^2.1.12",
     "@tiptap/starter-kit": "^2.1.12",
+    "@tiptap/vue-3": "^2.10.4",
     "@types/vue-router": "^2.0.0",
+    "element-plus": "^2.9.1",
     "lodash-es": "^4.17.21",
     "pinia": "^2.1.7",
     "tiptap-extension-bullet-list": "^1.0.0",
@@ -62,6 +67,7 @@
     "tiptap-extension-section": "^1.0.0",
     "tiptap-extension-trailing-node": "^1.0.0",
     "tiptap-extension-video": "^1.0.0",
+    "vue": "^3.5.13",
     "vue-router": "^4.3.0"
   }
 }

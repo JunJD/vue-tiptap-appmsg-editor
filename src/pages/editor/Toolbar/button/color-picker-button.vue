@@ -39,6 +39,7 @@ onMounted(() => {
 const handleUpdateColorState = ({ editor, transaction }) => {
   if (transaction.updated === 0) return;
   const colorValue = editor.getAttributes("textStyle").color;
+  if(!colorLumpRef.value) return
   if (colorValue) {
     picker.setColor(colorValue, true);
     colorLumpRef.value.style.backgroundColor = colorValue;

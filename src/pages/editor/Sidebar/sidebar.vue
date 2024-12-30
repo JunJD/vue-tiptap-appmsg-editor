@@ -1,6 +1,7 @@
 <script setup>
 import { editor } from "@/pages/editor/editor.js";
 import { Tabs } from "@/plugins/tabs/index.js";
+import NodePane from '@/pages/editor/Sidebar/NodePane/node-pane.vue'
 
 // Tabs
 const sidebarTabsRef = ref();
@@ -82,6 +83,7 @@ function handleInsert(html) {
       <div class="tabs-nav">
         <div class="tab-item" data-name="graphic">图文</div>
         <div class="tab-item" data-name="template">模板</div>
+        <div class="tab-item" data-name="node">节点</div>
       </div>
       <div class="tabs-content">
         <div class="tab-pane" data-id="graphic">
@@ -108,6 +110,9 @@ function handleInsert(html) {
             </template>
           </div>
         </div>
+        <div class="tab-pane" data-id="node">
+          <NodePane />
+        </div>
       </div>
     </div>
   </div>
@@ -117,8 +122,8 @@ function handleInsert(html) {
 /* 侧壁栏 */
 .sidebar {
   position: absolute;
-  width: 24vw;
-  min-width: 320px;
+  width: 20vw;
+  min-width: 280px;
   top: 90px;
   bottom: 0;
   left: 0;

@@ -3,15 +3,15 @@ import "@/assets/styles/tiptap-appmsg.css";
 import FunctionBar from "./FunctionBar/functionBar.vue";
 import Toolbar from "./Toolbar/toolbar.vue";
 import Sidebar from "./Sidebar/sidebar.vue";
+import PropertyPanel from "./PropertyPanel/property-panel.vue";
+import FloatingLeftMenu from "./FloatingLeftMenu/index.vue";
 import { editor } from "./editor.js";
-
-const editorContainerRef = ref();
-onMounted(() => {
-  editorContainerRef.value.insertBefore(
-    editor.options.element,
-    editorContainerRef.value.querySelector(".footer")
-  );
-});
+import { EditorContent } from "@tiptap/vue-3";
+import { PropertySettingProvider } from "./PropertyPanel/PropertySettingProvider.js";
+const handlePreview = () => {
+  console.log("预览");
+  console.log(editor.getJSON());
+};
 </script>
 
 <template>
@@ -20,15 +20,22 @@ onMounted(() => {
   </div>
   <toolbar />
   <sidebar />
+
   <div class="editor-wrapper">
-    <div ref="editorContainerRef" class="editor-container">
+    <div class="editor-container">
+      <PropertySettingProvider>
+        <div class="editor-content-wrapper">
+          <property-panel />
+          <editor-content :editor="editor" class="tiptap-editor" />
+          <floating-left-menu :editor="editor" />
+        </div>
+      </PropertySettingProvider>
       <div class="footer">
         <div class="info">
-          <!-- <div class="save-time">20:23&emsp;已保存</div> -->
-          <div>正文字数 <span class="word-count">0</span></div>
+          <div class="save-time">20:23&emsp;已保存</div>
         </div>
         <div class="operation">
-          <div class="btn btn-preview">预览</div>
+          <div class="btn btn-preview" @click="handlePreview">预览</div>
           <div class="btn btn-copy" data-clipboard-target=".tiptap.ProseMirror">
             一键复制
           </div>
@@ -58,13 +65,16 @@ onMounted(() => {
   /* overflow: auto; */
   padding-top: 120px;
   padding-left: 20vw;
+  padding-right: 300px;
 }
 
 .editor-container {
   position: relative;
-  width: 768px;
+  width: 52vw;
+  min-width: 768px;
   margin: 0 auto;
   z-index: 1;
+
   :deep(.tiptap-editor) {
     padding: 45px 95px 115px;
     position: relative;
@@ -142,7 +152,7 @@ onMounted(() => {
     border-bottom-color: #07c160;
   }
 
-  .tab-item + .tab-item {
+  .tab-item+.tab-item {
     margin-left: 12px;
   }
 

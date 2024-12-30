@@ -1,4 +1,4 @@
-import { Editor } from "@tiptap/core";
+import { Editor } from "@tiptap/vue-3";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "tiptap-extension-image";
 import Video from "tiptap-extension-video";
@@ -12,7 +12,7 @@ import Highlight from "@tiptap/extension-highlight";
 import Link from "tiptap-extension-link";
 import CodeBlock from "@tiptap/extension-code-block";
 import TrailingNode from "tiptap-extension-trailing-node";
-import Section from "tiptap-extension-section";
+import { Section, CustomFocus as Focus } from "@/pages/editor/extension";
 import ImageLink from "tiptap-extension-image-link";
 import Hr from "tiptap-extension-hr";
 import BulletList from "tiptap-extension-bullet-list";
@@ -21,12 +21,9 @@ import LineHeight from "tiptap-extension-line-height";
 import Float from "tiptap-extension-float";
 import Margin from "tiptap-extension-margin";
 import Resizable from "tiptap-extension-resizable";
-
-const $ele = document.createElement("div");
-$ele.classList.add("tiptap-editor");
+import { NodeId } from './extension/node-id'
 
 export const editor = new Editor({
-  element: $ele,
   extensions: [
     TrailingNode,
     StarterKit.configure({
@@ -50,6 +47,11 @@ export const editor = new Editor({
     Video.configure({ allowBase64: true }),
     Iframe,
     Section,
+    Focus.configure({
+      className: 'shimmer-node-focused',
+      mode: 'all',
+      allowedTags: ['section', 'image']
+    }),
     ImageLink,
     Hr,
     BulletList.configure({ HTMLAttributes: { class: "list-paddingleft-1" } }),
@@ -59,5 +61,13 @@ export const editor = new Editor({
     LineHeight,
     Float,
     Margin,
+    NodeId,
   ],
-});
+  editable: true,
+  injectCSS: false,
+})
+
+// 确保在组件卸载时销毁编辑器
+window.addEventListener('beforeunload', () => {
+  editor.destroy()
+})

@@ -1,33 +1,22 @@
 module.exports = {
   root: true,
-  parserOptions: {
-    parser: "@babel/eslint-parser",
-    ecmaVersion: 2019,
-    sourceType: "module",
-    ecmaFeatures: {
-      globalReturn: false,
-      impliedStrict: true,
-      jsx: true,
-    },
-    requireConfigFile: false,
-    allowImportExportEverywhere: false,
-  },
   env: {
     browser: true,
     node: true,
-    commonjs: true,
-    es6: true,
-    jquery: true,
+    es2021: true,
   },
   extends: [
-    "eslint:recommended",
-    "plugin:vue/vue3-recommended",
-    "plugin:prettier/recommended",
-    "./eslintrc-auto-import.json",
+    'plugin:vue/vue3-recommended',
+    'eslint:recommended',
+    'prettier'
   ],
-  rules: {
-    "prettier/prettier": "warn",
-    "no-unused-vars": "off",
-    "vue/multi-word-component-names": "off",
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   },
-};
+  plugins: ['vue', 'prettier'],
+  rules: {
+    'vue/multi-word-component-names': 'off',
+    'prettier/prettier': 'error',
+  },
+}
