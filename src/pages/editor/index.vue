@@ -12,6 +12,11 @@ const handlePreview = () => {
   console.log("预览");
   console.log(editor.getJSON());
 };
+
+const handleCopy = () => {
+  console.log("复制");
+};
+
 </script>
 
 <template>
@@ -36,7 +41,7 @@ const handlePreview = () => {
         </div>
         <div class="operation">
           <div class="btn btn-preview" @click="handlePreview">预览</div>
-          <div class="btn btn-copy" data-clipboard-target=".tiptap.ProseMirror">
+          <div class="btn btn-copy" data-clipboard-target=".tiptap.ProseMirror" @click="handleCopy">
             一键复制
           </div>
         </div>

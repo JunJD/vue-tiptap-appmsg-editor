@@ -22,6 +22,7 @@ import Float from "tiptap-extension-float";
 import Margin from "tiptap-extension-margin";
 import Resizable from "tiptap-extension-resizable";
 import { NodeId } from './extension/node-id'
+import { RankingList } from './extension/rankingList'
 
 export const editor = new Editor({
   extensions: [
@@ -50,7 +51,7 @@ export const editor = new Editor({
     Focus.configure({
       className: 'shimmer-node-focused',
       mode: 'all',
-      allowedTags: ['section', 'image']
+      allowedTags: ['section', 'rankingList']
     }),
     ImageLink,
     Hr,
@@ -62,6 +63,7 @@ export const editor = new Editor({
     Float,
     Margin,
     NodeId,
+    RankingList
   ],
   editable: true,
   injectCSS: false,

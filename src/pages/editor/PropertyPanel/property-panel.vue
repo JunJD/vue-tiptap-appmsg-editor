@@ -21,7 +21,6 @@ import { unref, computed } from 'vue'
 import { usePropertySetting } from './PropertySettingProvider' 
 import { getId, getTypeName } from './utils'
 import { nodeConfigs } from './configs'
-import SectionConfig from './components/SectionConfig.vue'
 
 const { activeNode } = usePropertySetting()
 
@@ -31,6 +30,7 @@ const currentConfig = computed(() => {
   
   // 将组件名称映射到实际组件
   const config = nodeConfigs[getTypeName(node)]
+  console.log(config, 'config')
   if (config) {
     return {
       ...config,

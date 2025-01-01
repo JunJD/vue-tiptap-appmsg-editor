@@ -1,9 +1,8 @@
 <script setup>
 import { FloatingMenu } from "@tiptap/vue-3";
-import { ref, computed, unref } from 'vue';
-import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus';
+import { computed, unref } from 'vue';
 import { Setting } from "@element-plus/icons-vue";
-import { getCurrentNodeOfType } from '../extension/custom-focus'
+import { customFocusPluginKey } from '../extension/custom-focus'
 import { usePropertySetting } from '../PropertyPanel/PropertySettingProvider'
 
 const { setActiveNode } = usePropertySetting()
@@ -16,7 +15,7 @@ const props = defineProps({
   nodeTypes: {
     type: Array,
     required: true,
-    default: ['section', 'image']
+    default: ['section', 'image', 'rankingList']
   },
   getMenuList: {
     type: Function,
@@ -25,10 +24,7 @@ const props = defineProps({
   }
 });
 
-// 获取当前节点类型和菜单列表
-const currentNodeInfo = computed(() => {
-  return getCurrentNodeOfType(props.editor.state, props.nodeTypes)
-})
+const currentNodeInfo = ref(null)
 
 const defaultMenuList = [
   {
@@ -51,9 +47,12 @@ const renderMenuList = computed(() => {
   return [...menuList.value, ...defaultMenuList]
 })
 
+const handleMouseEnter = () => {
+  currentNodeInfo.value = customFocusPluginKey.getState(props.editor.state)?.focusedNode || null
+}
+
 // 处理菜单项点击
 const handleCommand = (command) => {
-  console.log('command',command);
   const item = renderMenuList.value.find(item => item.key === command);
   if (item) {
     item.action(props.editor, unref(currentNodeInfo));
@@ -61,27 +60,13 @@ const handleCommand = (command) => {
 };
 
 const shouldShowMenu = ({ editor, view, state, oldState }) => {
-  // $from 和 $to 是 ProseMirror 的 ResolvedPos 对象
-  // 它们包含了当前选区的起始和结束位置的详细信息
-  const { $from, $to } = state.selection;
-  
-  // depth 为 0 表示在文档根节点，此时不显示菜单
-  if ($from.depth === 0 || $to.depth === 0) return false;
-  
-  // 从当前节点开始向上遍历文档树
-  // depth 表示当前节点的深度，每个父节点 depth 减 1
-  let depth = $from.depth;
-  while (depth > 0) {
-    // node() 方法返回指定深度的节点
-    const node = $from.node(depth);
-    // 检查节点类型是否在允许的类型列表中
-    if (props.nodeTypes.includes(node.type.name)) {
-      return true;
-    }
-    depth--;
-  }
-  return false;
-};
+  // 直接从插件状态获取焦点节点信息
+  const focusedNode = customFocusPluginKey.getState(state)?.focusedNode
+  if (!focusedNode) return false
+
+  // 检查节点类型是否在允许的类型列表中
+  return props.nodeTypes.includes(focusedNode.type)
+}
 
 const tippyOptions = {
   appendTo: 'parent',
@@ -89,29 +74,17 @@ const tippyOptions = {
   fixed: true,
   offset: [0, 0],
   getReferenceClientRect: () => {
-    const { state, view } = props.editor;
-    const { $from } = state.selection;
-    let depth = $from.depth;
-    let targetPos = null;
+    const { view } = props.editor
+    const focusedNode = customFocusPluginKey.getState(props.editor.state)?.focusedNode
+    if (!focusedNode) return null
     
-    while (depth > 0) {
-      const node = $from.node(depth);
-      if (props.nodeTypes.includes(node.type.name)) {
-        targetPos = $from.before(depth);
-        break;
-      }
-      depth--;
-    }
-    
-    if (targetPos === null) return null;
-    
-    const nodeDOM = view.nodeDOM(targetPos);
-    const editorView = view.dom.getBoundingClientRect();
+    const nodeDOM = view.nodeDOM(focusedNode.pos)
+    const editorView = view.dom.getBoundingClientRect()
     
     if (nodeDOM) {
-      const nodeBounds = nodeDOM.getBoundingClientRect();
-      const buttonWidth = 24;
-      const right = editorView.right - 12;
+      const nodeBounds = nodeDOM.getBoundingClientRect()
+      const buttonWidth = 24
+      const right = editorView.right - 12
       
       return {
         width: 0,
@@ -120,9 +93,9 @@ const tippyOptions = {
         bottom: nodeBounds.top,
         left: right - (buttonWidth / 2),
         right: right - (buttonWidth / 2),
-      };
+      }
     }
-    return null;
+    return null
   },
 };
 </script>
@@ -134,62 +107,76 @@ const tippyOptions = {
     :tippy-options="tippyOptions"
     :should-show="shouldShowMenu"
   >
-    <el-dropdown 
-      trigger="click" 
-      @command="handleCommand"
+    <el-popover
+      placement="left-start"
+      :width="120"
+      :show-arrow="false"
+      popper-class="section-menu-popover"
     >
-      <span class="el-dropdown-link">
-        <el-icon class="el-icon--center">
-          <el-icon size="16"><Setting /></el-icon>
-        </el-icon>
-      </span>
-      
-      <template #dropdown>
-        <el-dropdown-menu>
-          <el-dropdown-item
-            v-for="item in renderMenuList"
-            :key="item.key"
-            :command="item.key"
-          >
-            {{ item.label }}
-          </el-dropdown-item>
-        </el-dropdown-menu>
+      <template #reference>
+        <el-button class="menu-trigger" size="small" @mouseenter="handleMouseEnter">
+          <el-icon><Setting /></el-icon>
+        </el-button>
       </template>
-    </el-dropdown>
+      
+      <div class="menu-list">
+        <div
+          v-for="item in renderMenuList"
+          :key="item.key"
+          class="menu-item"
+          @click.stop.capture.prevent="handleCommand(item.key)"
+        >
+          {{ item.label }}
+        </div>
+      </div>
+    </el-popover>
   </floating-menu> 
 </template>
+
+<style lang="less">
+// 移除 scoped，让样式可以作用到 popover
+.section-menu-popover {
+  padding: 4px 0 !important;
+  
+  .menu-list {
+    .menu-item {
+      padding: 8px 12px;
+      cursor: pointer;
+      color: var(--el-text-color-regular);
+      font-size: var(--el-font-size-base);
+      transition: background-color 0.3s;
+      
+      &:hover {
+        background-color: var(--el-fill-color-light);
+        color: var(--el-color-primary);
+      }
+    }
+  }
+}
+
+// 确保弹出层在编辑器内部正确显示
+.el-popper.section-menu-popover {
+  z-index: 30000;
+}
+</style>
 
 <style lang="less" scoped>
 .section-floating-menu {
   display: flex;
-  background-color: var(--el-bg-color);
-  border-radius: var(--el-border-radius-base);
-  box-shadow: var(--el-box-shadow-light);
   position: fixed;
   
-  .el-dropdown-link {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  .menu-trigger {
+    width: 24px;
+    height: 24px;
+    padding: 4px;
     border: 1px solid var(--el-border-color);
     border-radius: var(--el-border-radius-base);
     background: var(--el-bg-color);
-    cursor: pointer;
     color: var(--el-text-color-regular);
-    font-size: var(--el-font-size-base);
-    width: 24px;
-    height: 24px;
-    justify-content: center;
-    padding: 4px;
     
     &:hover {
       background: var(--el-fill-color-light);
     }
   }
-}
-
-// 确保下拉菜单在编辑器内部正确显示
-:deep(.el-dropdown__popper) {
-  z-index: 30000; // 设置一个较高的 z-index
 }
 </style> 

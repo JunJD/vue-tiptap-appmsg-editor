@@ -17,7 +17,7 @@ export const PropertySettingProvider = defineComponent({
     })
 
     return () => slots.default?.()
-  },
+  }
 })
 
 export const usePropertySetting = () => {
