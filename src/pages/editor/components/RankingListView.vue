@@ -1,5 +1,5 @@
 <template>
-  <node-view-wrapper class="ranking-list" :class="{ 'auto-scroll': node.attrs.autoScroll }" @click="handleClick">
+  <node-view-wrapper class="ranking-list" :class="{ 'auto-scroll': node.attrs.autoScroll }" >
     <div class="ranking-list-content" ref="listContent">
       <!-- 原始列表 -->
       <div class="ranking-items original" contenteditable="false">
@@ -98,20 +98,6 @@ onMounted(() => {
 onUnmounted(() => {
   stopScroll()
 })
-
-// 处理点击事件
-const handleClick = () => {
-  const pos = props.getPos()
-  console.log(pos, 'pos')
-//   if (typeof pos !== 'number') return
-  
-//   // 使用 TextSelection 而不是 NodeSelection
-//   const { state, dispatch } = editor.view
-//   const selection = state.selection.constructor.near(state.doc.resolve(pos))
-//   dispatch(state.tr.setSelection(selection))
-  
-//   editor.view.focus()
-}
 </script>
 
 <style lang="less" scoped>

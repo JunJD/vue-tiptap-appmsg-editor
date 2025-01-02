@@ -15,7 +15,7 @@ const props = defineProps({
   nodeTypes: {
     type: Array,
     required: true,
-    default: ['section', 'image', 'rankingList']
+    default: ['section', 'rankingList', 'opForm']
   },
   getMenuList: {
     type: Function,

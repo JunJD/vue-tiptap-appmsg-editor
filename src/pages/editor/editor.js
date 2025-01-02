@@ -52,7 +52,7 @@ export const editor = new Editor({
     Focus.configure({
       className: 'shimmer-node-focused',
       mode: 'all',
-      allowedTags: ['section', 'rankingList']
+      allowedTags: ['section', 'rankingList', 'opForm']
     }),
     ImageLink,
     Hr,
