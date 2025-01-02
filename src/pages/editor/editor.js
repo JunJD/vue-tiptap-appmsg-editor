@@ -23,6 +23,7 @@ import Margin from "tiptap-extension-margin";
 import Resizable from "tiptap-extension-resizable";
 import { NodeId } from './extension/node-id'
 import { RankingList } from './extension/rankingList'
+import { OpForm } from './extension/op-form'
 
 export const editor = new Editor({
   extensions: [
@@ -63,7 +64,8 @@ export const editor = new Editor({
     Float,
     Margin,
     NodeId,
-    RankingList
+    RankingList,
+    OpForm
   ],
   editable: true,
   injectCSS: false,

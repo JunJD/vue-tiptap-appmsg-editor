@@ -53,21 +53,14 @@ export const RankingList = Node.create({
       setRankingList: (attributes = {}) => ({ commands }) => {
         const defaultData = {
           data: [
-            { name: '张三', score: 100 },
-            { name: '李四', score: 95 },
-            { name: '王五', score: 90 },
-            { name: '赵六', score: 85 },
-            { name: '孙七', score: 80 },
-            { name: '周八', score: 75 },
-            { name: '吴九', score: 70 },
-            { name: '郑十', score: 65 }
+            { name: '张三', score: 100 }
           ],
           columns: [
             { field: 'name', title: '姓名' },
             { field: 'score', title: '分数' }
           ],
           template: '${index}. ${name}: ${score}',
-          autoScroll: false,
+          autoScroll: true,
           scrollInterval: 150
         }
 
