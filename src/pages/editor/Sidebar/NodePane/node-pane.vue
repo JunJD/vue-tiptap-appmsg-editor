@@ -34,7 +34,8 @@
 
 <script setup>
 import { editor } from "@/pages/editor/editor.js";
-
+import { useScreenDetail } from "@/composables/useScreen";
+const { screenDetail, addViewNode } = useScreenDetail()
 const insertSection = () => {
   editor.commands.insertSection()
 }
@@ -68,6 +69,13 @@ const insertRankingList = () => {
       { field: 'name', title: '姓名' },
       { field: 'score', title: '分数' }
     ]
+  })
+  addViewNode({
+    type: 'rankingList',
+    data: {
+      id: 'rankingList_1',
+      title: '排行榜'
+    }
   })
 }
 

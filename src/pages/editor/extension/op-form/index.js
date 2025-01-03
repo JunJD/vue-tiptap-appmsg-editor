@@ -85,6 +85,10 @@ export const OpForm = Node.create({
         'data-node-view-wrapper': ''
       },
       this.options.HTMLAttributes,
+      {
+        'id': HTMLAttributes.id,
+        'data-node-id': HTMLAttributes.id
+      },
       HTMLAttributes
     ), 0]
   },

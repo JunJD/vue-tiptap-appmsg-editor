@@ -8,6 +8,8 @@ import FloatingLeftMenu from "./FloatingLeftMenu/index.vue";
 import { editor } from "./editor.js";
 import { EditorContent } from "@tiptap/vue-3";
 import { PropertySettingProvider } from "./PropertyPanel/PropertySettingProvider.js";
+import { useInitScreen } from "@/composables/useScreen";
+useInitScreen()
 const handlePreview = () => {
   console.log("预览");
   console.log(editor.getJSON());

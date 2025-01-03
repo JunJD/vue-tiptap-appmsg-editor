@@ -21,15 +21,6 @@ export default Node.create({
           return { style: attributes.style };
         },
       },
-      // 保留id属性，用于定位节点
-      id: {
-        default: null,
-        parseHTML: element => element.getAttribute('id'),
-        renderHTML: attributes => {
-          if (!attributes.id) return {};
-          return { id: attributes.id };
-        },
-      },
     };
   },
 
@@ -44,11 +35,9 @@ export default Node.create({
 
   addCommands() {
     return {
-      insertSection: () => ({ chain, dispatch, tr, state, editor }) => {
-        const sectionId = editor.commands.generateNodeId();
-        
+      insertSection: () => ({ chain, dispatch, tr, state }) => {
         const node = state.schema.nodes[this.name].create(
-          { id: sectionId },
+          null,
           [state.schema.nodes.paragraph.create(
             null,
             [state.schema.text('请输入内容')]
